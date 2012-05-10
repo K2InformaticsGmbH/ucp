@@ -1,0 +1,17 @@
+%% -*- erlang -*-
+%% vim: set filetype=erlang:
+{application, util,
+ [
+  {description, ""},
+  {vsn, "0.1"},
+  {modules, [
+             %MODULES%
+            ]},
+  {registered, []},
+  {applications, [
+                  kernel,
+                  stdlib,
+                  simple_logger
+                 ]},
+  {mod, {util_app, []}}
+ ]}.

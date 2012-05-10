@@ -1,0 +1,10 @@
+#!/bin/bash
+
+REBAR_PATH=external_tools/rebar
+
+if [[ -n $1 ]]; then
+  echo "Creating node $1"
+  cd rel && mkdir $1 && cd $1 && ../../$REBAR_PATH/rebar create-node nodeid=$1
+else
+  echo "Pass in node name as an argument"
+fi

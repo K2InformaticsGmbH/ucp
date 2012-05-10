@@ -1,0 +1,12 @@
+{application, simple_logger,
+ [
+  {description, ""},
+  {vsn, "0.1"},
+  {registered, []},
+  {applications, [
+                  kernel,
+                  stdlib
+                 ]},
+  {mod, { simple_logger_app, []}},
+  {env, []}
+ ]}.

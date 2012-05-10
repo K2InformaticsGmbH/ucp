@@ -1,0 +1,4 @@
+-type server_variable() :: login_response | receive_mt_response | auto_drs | auto_dr_delay | auto_dr_delivery_status | auto_dr_error_code.
+-define(DR_REQUEST_LOG, dr_request_log).
+-define(MO_REQUEST_LOG, dr_request_log).
+-define(MT_REQUEST_LOG, dr_request_log).

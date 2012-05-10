@@ -1,0 +1,53 @@
+#!/bin/bash
+
+ERL_PATH=$(dirname $(which erl))
+ERL_TOP=$(dirname $ERL_PATH)
+REBAR_PATH=external_tools/rebar
+SCRIPT=`basename $0`
+HOST=`hostname`
+
+function generate {
+    rm -rf rel/$1/$1
+    cd rel/$1 && PATH=$ERL_PATH:$PATH ../../$REBAR_PATH/rebar generate
+    cd -
+
+    # symlink libs
+    for f in `ls rel/$1/$1/lib/`
+    do
+        basefile=`basename $f`
+        libname=${basefile/\-*/}
+
+        if [ -d apps/$libname ]; then
+            echo "Symlinking $libname"
+            rm -rf rel/$1/$1/lib/$libname*
+            ln -s ../../../../apps/$libname rel/$1/$1/lib/$basefile
+        fi
+
+        if [ -d $ERL_TOP/lib/erlang/lib/$basefile ]; then
+            echo "Symlinking $libname"
+            rm -rf rel/$1/$1/lib/$libname*
+            ln -s $ERL_TOP/lib/erlang/lib/$basefile rel/$1/$1/lib/$basefile
+        fi
+
+    done
+}
+
+if [[ -n $1 ]]; then
+    case $1 in
+        all)
+            echo "Generating everything"
+            for f in `ls rel/`
+            do
+                if [ -e rel/$f/reltool.config ];then
+                    generate $f
+                fi
+            done
+            ;;
+        *)
+            generate $1
+            ;;
+    esac
+
+else
+  echo "Usage : $SCRIPT {<nodename>|all}"
+fi

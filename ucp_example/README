@@ -1,0 +1,113 @@
+ucp_example
+===========
+An example of usage of the ucperl library.
+
+The ucp_client application is an implementation of an ESME while the ucp_server application is an implementation of a SMSC stub.
+
+
+===============================================================================
+compile, generate and start nodes
+===============================================================================
+
+From the ucp_example folder:
+
+To compile all the application use:
+
+    make
+
+To generate a node (NODENAME ucp_client1 or ucp_server1) use the generatenode script like:
+
+    ./generatenode NODENAME
+
+To start a node (NODENAME ucp_client1 or ucp_server1):
+    
+    ./rel/NODENAME/NODENAME/bin/NODENAME start
+
+To attach a node (NODENAME ucp_client1 or ucp_server1):
+    
+    ./rel/NODENAME/NODENAME/bin/NODENAME attach
+
+While nodes run, logs will be written  in:
+
+    ./rel/NODENAME/NODENAME/log
+
+directory.
+
+
+===============================================================================
+send messages
+===============================================================================
+
+Application variables are defined in rel/NODENAME/files/sys.config
+
+    ====
+    MTs
+    ====
+    To send a Mt through a random connection:
+        
+        Compile, generate and start both nodes. 
+        Attach to the ucp_client node and (after the login success) call default_operator:send_text_mt/3
+
+            E.g:
+            (ucp_client1@127.0.0.1)1> default_operator:send_text_mt("Originator", "4400000000", "Message Body").
+
+        To specify also the originator format, connection and billing code use default_operator:send_text_mt/6
+
+            E.g:
+            (ucp_server1@127.0.0.1)1> default_operator:send_text_mt("441111111111", international_msisdn, "4400000000", "CONN1", "Message Body", "320000").
+
+        Note: send_text_mt/3 and send_text_mt/6 automatically split the body and create the UDH if it contains more than 160 characters.
+
+    ====
+    DRs
+    ====
+
+    By default a Dr with delivery status and error_code 0 will be automatically sent to the ucp_client node from the ucp_server node.
+
+    To change the behaviour of the ucp_server node while it is running:
+
+        attach the node and call ucp_server:set_variable/2
+        E.g:
+        (ucp_server1@127.0.0.1)1> ucp_server_app:set_variable(auto_dr_delivery_status, 1).
+
+
+    When auto_drs is set to false, to send a dr related to a mt:
+
+        get the list of pending mts:
+
+        (ucp_server1@127.0.0.1)2> ucp_server:get_mts().
+            [{"275071353753","Originator","4400000000",[205,242,124,30,62,151,65,194,55,57,15],{{2012,5,10},{14,43,37}}]
+
+        use ucp_server:send_dr/4 to send a dr using an existing MsgId (in the example "275071353753"):
+        (ucp_server1@127.0.0.1)3> ucp_server:send_dr("275071353753", {{2012,5,10},{14,43,37}}, 0, 0).
+
+        to send a dr not related to any mt, use ucp_server:send_fake_dr/6:
+
+        (ucp_server1@127.0.0.1)4> ucp_server:send_fake_dr("Originator", "4400000000", not_existing_msg_id", {{2012,5,10},{14,43,37}}, 0, 0).
+
+    ====
+    MOs
+    ====
+
+    To send a Mo use ucp_server:send_mo/3 or ucp_server:send_concat_mo/3:
+
+        E.g:
+        ucp_server1@127.0.0.1)4> ucp_server:send_mo("Originator", "4400000000", "Mo body").
+
+
+
+===============================================================================
+run test, dialyzer
+===============================================================================
+
+From the ucp_example folder:
+
+To run tests:
+
+    make get_deps
+    make eunit
+
+To run dialyzer:
+
+    make plt (just once)
+    make dialyze
