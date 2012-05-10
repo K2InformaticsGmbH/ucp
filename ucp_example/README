@@ -68,7 +68,7 @@ Application variables are defined in rel/NODENAME/files/sys.config
 
         attach the node and call ucp_server:set_variable/2
         E.g:
-        (ucp_server1@127.0.0.1)1> ucp_server_app:set_variable(auto_dr_delivery_status, 1).
+        (ucp_server1@127.0.0.1)1> ucp_server_app:set_variable(auto_drs, false).
 
 
     When auto_drs is set to false, to send a dr related to a mt:
@@ -83,7 +83,7 @@ Application variables are defined in rel/NODENAME/files/sys.config
 
         to send a dr not related to any mt, use ucp_server:send_fake_dr/6:
 
-        (ucp_server1@127.0.0.1)4> ucp_server:send_fake_dr("Originator", "4400000000", not_existing_msg_id", {{2012,5,10},{14,43,37}}, 0, 0).
+        (ucp_server1@127.0.0.1)4> ucp_server:send_fake_dr("Originator", "4400000000", "not_existing_msg_id", {{2012,5,10},{14,43,37}}, 0, 0).
 
     ====
     MOs
@@ -104,7 +104,6 @@ From the ucp_example folder:
 
 To run tests:
 
-    make get_deps
     make eunit
 
 To run dialyzer:
