@@ -1,0 +1,222 @@
+This file  contains important solved issues in  the UCPERL application
+with regard to the UK H3G service.
+
+See also the file ISSUES for unsolved issues
+
+
+
+002: The LRAd and LPID fields in the 51 operation message
+
+Those fields are acording to  the LogicaCMG spec mandatory. But - they
+are  not  mentioned as  used  in any  other  spec,  including the  H3G
+spec. If  you read the text  describing those fields  in the LogicaCMG
+spec - it  is also rather obvious that they are  not mandatory. But in
+the LogicaCMG examples they are there.
+
+SOLVED: they are optional in a newer spec
+
+
+004: Timeout of replies
+
+The library UCPERL does not make any time outs of replies.
+
+SOLVED: There is a time out now
+
+
+005: Matching of replies
+
+The library UCPERL does not make any matching of replies.
+
+NOT NEEDED: This must be up to the application
+
+
+006: Bug in Net::UCP
+
+There is a bug in the Perl  Net:UCP library. To run the tests you have
+to fix  it manually. In the  file UCP.pm in the  installed library you
+have to add  message 31 to the list of messages  that are supported in
+the function parse_message.
+
+SOLVED: The bug is reported and there is a fix.
+
+SOLVED AGAIN: Now the UCPERL library can implement servers
+
+
+010: Specific callbacks for known messages.
+
+Currently all operations are returned in the same callback. Is there a
+need from the application thet the libarary shall use specific
+callbacks for known messages? Or is this only a complication?
+
+SOLVED: not needed
+
+
+011: The UCP keyvalue list
+
+The  callback  has one  argument  contaning  all  parsed fields  in  a
+keyvalue list.   Is this a  good choice? Or  - should it  be organized
+differently. And if  it is a keyvalue list  - are functions extracting
+certain information needed?
+
+SOLVED: Its OK
+
+
+012: Large messages
+
+The current  implementation do not support dividing  messages in order
+to  send  larger   messages  than  allowed.  Does  that   need  to  be
+implemented?   Is it  then up  to the  library or  the  application to
+divide messages?
+
+SOLVED: it is now implemented
+
+
+013: Numeric and binary messages
+
+The current  implementation only supports  text messages.  I  ssume we
+want numeric and binary messages. Right?
+
+SOLVED: implemented
+
+
+014: Result for ot 31 ??
+
+Do the  user want to get the  results to keep alive  messages (31)? It
+might be useful if the SMSC starts to send NACK for some reason. Or it
+might be disturbing.
+
+SOLVED: its OK
+
+
+015: Unparsed message in callback ?
+
+Does the user need/want the unparsed message in the callback?
+
+SOLVED: You now also get the RAW message - to do with what you want
+
+
+017: No support for logging
+
+SOLVED: Logging of warnings/errors is using error_logger
+
+
+018: No event_manager and supervisor
+
+SOLVED: Its a gen server - just start it with start_link
+
+
+019: Only support for 51 for messages 5x
+
+SOLVED: sort of - there is a new more general issue (31) written.
+
+
+020: Example server should send 52 and 53
+
+This  means  that  make_52  and  make_53  has  to  be  implemented  in
+ucp_session.
+
+SOLVED: this is really only needed if you make a real SMSC
+
+
+021: The library do not support windowing
+
+This is probably not necessary. But ... is it sure that the MIG worker
+model is a  correct solution?  What happens if  the SMSC sends results
+in the wrong order?
+
+SOLVED: it is now implemented for output windowing
+COMMENT: see issue 024
+
+
+022: More than 100 outstanding operations is not a good idea
+
+The  current implementation  does not  test for  duplicate outstanding
+operations. So - bad things may happen if you do.
+
+SOLVED: the library refuses to send outstanding TRN
+
+
+023: What license shall the Copyright use ??
+
+SOLVED: Integrated to the MIG code
+
+
+024: The library do not support input windowing
+
+SOLVED: Only needed if you want to make an SMSC.
+
+
+026: The ONPI and OTON fields are mandatory for H3G UK for message 60
+
+Dont forget those!  As they  are not mandatory for the specification -
+they  are not  mandatory  fields for  login.   So -  they  have to  be
+provided in the options.
+
+SOLVED: this is not a real issue
+
+
+027: The OTOA and XSer fields are filled in in the 51 example
+
+According to the spec the OTOA and XSer fields are optional. But -
+they are filled in in the H3G UK/RoI examples.
+
+
+SOLVED: this is not an issue
+
+
+028: The XSer field
+
+This is another protocol embedded and  encoded into UCP. Its a kind of
+tunnel to underlaying protocols, e.g. GSM or TDMA.
+
+For H3G UK - this is  of course GSM. Several services can be specified
+here, e.g. billing data and multiple message SMS.
+
+How to code charging is specified in the H3G document.
+
+How to code multiple SMS is specified in the logicaCMG document.
+
+The XSer field  is a mess if  you shall support it fully.  It is maybe
+necessary  to  hard  code it  to  be  able  to  implement it  using  a
+reasonable amount of time.
+
+SOLVED: there is support now for it
+
+
+029: 7 bit stuffing
+
+The OAdC field uses 7 bit stuffing for alphanumeric adresses.
+This stuffing is described in "3G TS 23.038". The library have
+to support this.
+
+COMMENT: stuffing and unstuffing code is implemented but not used. 
+
+SOLVED: It is now used
+
+
+033: events and supervising
+
+The  libary starts  a simple  gen_server. So  --- whats  the  plan for
+linking it into the general supervising and event tree structure?
+
+SOLVED: the library do call callbacks for all interesting situations -
+so the user might generate the events. And the user might start with
+start_link.
+
+
+036: The oadc field for 51 needs to differ from login and 31
+
+Currently the same address for myself is used in 31 (keep alive), 60
+(login) and 51. This seemed natural.  But - it is not so.  It looks
+like H3G UK uses an alphanumeric address in 51 and a short number in
+60.
+
+037: The build do not follow raven standard
+
+The  directory structure  and makefiles  are taken  from  OSERL.  This
+structure  do  not follow  the  raven  standard.  Unfortunately  extra
+directory levelks has to be added at the top - so all files will move;
+essentially making it into a totally new repository. I.e. traceability
+is gone.
+
+SOLVED: Its in rbar now :)

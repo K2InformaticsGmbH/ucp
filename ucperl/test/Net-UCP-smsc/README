@@ -1,0 +1,45 @@
+*** DESCRIPTION
+
+This is a test SMSC and a test client, a.k.a. esme.
+
+To start the smsc write ./smsc.pl
+
+The smsc listens to port 5000 on the local machine.
+
+You  can make  multiple  connections to  it  and it  reads and  parses
+incoming UCP messages. If the mesage is 31, 51 or 60 it replies with a
+dummy ACK. If it is something else it replies with a NACK/unsupported.
+
+The smsc also writes cryptic messages.
+
+The esme connects and sends a message and disconnect.  It is of course
+started with ./esme.pl.
+
+
+*** DEPRECATED
+
+Using this SMSC  in the UCPERL project is more  or less deprecated, as
+there now is an Erlang SMSC also.  It can be nice to use it for sanity
+tests  -  so  that  you   jnow  that  something  outside  the  project
+understands what you send.
+
+
+*** BUG
+
+There  is currently  a bug  in  the Net::UCP  library so  it does  not
+recognise the  31 message. The bug  is reported.  But ...  if you dont
+want a NACK for 31 then you have to fix it manually.
+
+In the file /usr/local/share/perl/5.10.0/Net/UCP.pm you have
+to change the line ...
+
+    if (my($optype) = $resp =~ m{^\d{2}/\d{5}/.*?/(01|02|03|30|51|52|53|54|55|56|57|58|60|61)/.*}) {
+
+... to ...
+
+    if (my($optype) = $resp =~ m{^\d{2}/\d{5}/.*?/(01|02|03|30|31|51|52|53|54|55|56|57|58|60|61)/.*}) {
+
+... i.e. adding 31
+
+
+/Roland

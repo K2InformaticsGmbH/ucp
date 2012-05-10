@@ -1,0 +1,17 @@
+%% -*- erlang -*-
+%% vim: set filetype=erlang:
+{application, ucperl,
+ [
+  {description, "Open EMI/UCP Erlang Library"},
+  {vsn, "0.3.20"},
+  {modules, [
+             %MODULES%
+            ]},
+  {registered, []},
+  {applications, [
+                  kernel,
+                  stdlib
+                 ]},
+  {mod, { ucperl_app, []}},
+  {env, []}
+ ]}.
