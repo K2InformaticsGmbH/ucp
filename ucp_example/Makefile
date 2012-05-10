@@ -1,6 +1,6 @@
 REBAR_PATH=external_tools/rebar
 
-compile:
+compile: get_deps
 	rm -rf apps/ucperl && $(REBAR_PATH)/rebar compile && cd apps && ln -s ../../ucperl ./ucperl
 
 clean_test:
@@ -23,7 +23,7 @@ tools:
 get_deps:
 	$(REBAR_PATH)/rebar get-deps
 
-plt:
+plt: compile clean_test
 	dialyzer --build_plt -r ./apps
 
 check_plt:
