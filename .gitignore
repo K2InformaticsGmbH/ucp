@@ -14,6 +14,7 @@
 apps/*/doc/*
 .eunit
 ucp_example/rel/*/*
+ucp_example/apps/ucperl
 !ucp_example/rel/*/files
 !ucp_example/rel/*/reltool.config
 .DS_Store
