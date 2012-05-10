@@ -1,6 +1,8 @@
 ucp_example
 ===========
-An example of usage of the ucperl library.
+An example of usage of the ucperl library.  
+
+This uses Rebar developed by Basho.
 
 The ucp_client application is an implementation of an ESME while the ucp_server application is an implementation of a SMSC stub.
 
