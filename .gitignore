@@ -13,12 +13,12 @@
 *.swp
 apps/*/doc/*
 .eunit
-rel/*/*
-!rel/*/files
-!rel/*/reltool.config
+ucp_example/rel/*/*
+!ucp_example/rel/*/files
+!ucp_example/rel/*/reltool.config
 .DS_Store
 tags
 *.html
 .*
 !.gitignore
-deps/
+ucp_example/deps/
