@@ -61,6 +61,13 @@
 -define(STX, 2).
 -define(ETX, 3).
 
+-ifdef(debug).
+-define(FORMAT(Format, Data), io:format(Format, Data)).
+-else.
+-define(FORMAT(_Format, _Data), ok).
+-endif.
+
+
 
 %%% MACROS
 
@@ -344,7 +351,7 @@ handle_call({login, OAddr, PWD, Opt}, From, State) ->
     {noreply, NewState, get_timeout(NewState)};
 
 handle_call({submit_sm, Addr, OrigAddr, SM, Opt}, From, State) ->
-    format("handle_call( {submit_sm, ~w, ~w, ~w, ~w}, ~w, ~w)~n",
+    format("handle_call( {submit_sm, ~w, ~w, ~w}, ~w, ~w)~n",
            [Addr, OrigAddr, SM, From, State]),
 
     MakeFun =
@@ -360,7 +367,7 @@ handle_call({submit_sm, Addr, OrigAddr, SM, Opt}, From, State) ->
 
 %%% TODO - copy and paste of submit_sm
 handle_call({delivery_sm, Addr, OrigAddr, SM, Opt}, From, State) ->
-    format("handle_call( {delivery_sm, ~w, ~w, ~w, ~w}, ~w, ~w)~n",
+    format("handle_call( {delivery_sm, ~w, ~w, ~w}, ~w, ~w)~n",
            [Addr, OrigAddr, SM, From, State]),
 
     MakeFun =
@@ -376,7 +383,7 @@ handle_call({delivery_sm, Addr, OrigAddr, SM, Opt}, From, State) ->
 
 %%% TODO - copy and paste of submit_sm
 handle_call({notify_sm, Addr, OrigAddr, Opt}, From, State) ->
-    format("handle_call( {notify_sm, ~w, ~w, ~w}, ~w, ~w)~n",
+    format("handle_call( {notify_sm, ~w, ~w}, ~w, ~w)~n",
            [Addr, OrigAddr, From, State]),
 
     MakeFun =
@@ -991,6 +998,5 @@ compute_used_window(Rtimers, NextTrnCnt) ->
 %%% Just a temporary thing that makes it easy to turn off logging
 %%% ----------------------------------------------------------
 
-format(_A, _B) ->
-    %% io:format(_A, _B).
-    ok.
+format(Format, Data) ->
+    ?FORMAT(Format, Data).

@@ -17,17 +17,32 @@ To compile all the application use:
 
     make
 
+
+To compile in debug mode:
+
+    modify the erl_opts config in rebar.config to define the macro debug adding {d, debug};
+
+    then run:
+    make clean
+    make
+
+    NOTE: it will print debug information of the ucperl library in the erlang shell.
+
+
 To generate a node (NODENAME ucp_client1 or ucp_server1) use the generatenode script like:
 
     ./generatenode NODENAME
+
 
 To start a node (NODENAME ucp_client1 or ucp_server1):
     
     ./rel/NODENAME/NODENAME/bin/NODENAME start
 
+
 To attach a node (NODENAME ucp_client1 or ucp_server1):
     
     ./rel/NODENAME/NODENAME/bin/NODENAME attach
+
 
 While nodes run, logs will be written  in:
 
