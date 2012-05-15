@@ -13,7 +13,7 @@ compile, generate and start nodes
 
 From the ucp_example folder:
 
-To compile all the application use:
+To compile all the applications use:
 
     make
 

@@ -11,7 +11,8 @@
 .#*
 *#
 *.swp
-apps/*/doc/*
+ucp_example/apps/*/doc/*
+ucperl/doc/*
 .eunit
 ucp_example/rel/*/*
 ucp_example/apps/ucperl
