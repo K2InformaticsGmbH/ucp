@@ -5,5 +5,3 @@ An Erlang UCP SMS library.
 It allows you to start an UCP session over a TCP connection.
 The ucp_session module defines a behaviour for a UCP session.
 ucp_syntax and ucp_arg_syntax define the syntax and parameter syntax for EMI/UCP messages.
-
-An example of usage of the library can be found in ucp_example.

@@ -39,8 +39,8 @@
 
 -behaviour(gen_server).
 
--include_lib("ucperl/include/ucp_defines.hrl").
--include_lib("ucperl/include/ucp_errors.hrl").
+-include_lib("ucp_defines.hrl").
+-include_lib("ucp_errors.hrl").
 
 
 %%% API EXPORTS
@@ -600,7 +600,7 @@ try_to_send_message(MakeFun, State, From) ->
                     State;
                 true ->
                 try
-                
+
                     reply(From, {ok, Trn}),
                     Message = MakeFun(Trn),
                     NewState = send_message(Message, State),

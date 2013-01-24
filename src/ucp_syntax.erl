@@ -45,8 +45,8 @@
 
 -module(ucp_syntax).
 
--include_lib("ucperl/include/ucp_defines.hrl").
--include_lib("ucperl/include/ucp_errors.hrl").
+-include_lib("ucp_defines.hrl").
+-include_lib("ucp_errors.hrl").
 
 %%% API EXPORTS
 
@@ -354,7 +354,7 @@ make_nack(UCP, Reason) ->
     %% maybe if we send the text, we are supposed to localize the text
     %% for different languages and needs? The current choice is to not
     %% send the text string.
-    
+
     {EC, SM} =
         case Reason of
             {_EC, _SM} ->
@@ -973,7 +973,7 @@ data_template_6x() ->
      {vers,num,4},              %% Version
      {ladc,{ip,[{lnpi,5}]},16}, %% Address of VSMSC list operation of type lnpi
                                 %% (IP if lnpi=5)
-     {lton,chrstr},             %% Type of number list operation 
+     {lton,chrstr},             %% Type of number list operation
      {lnpi,chrstr},             %% Number plan ID for list address
      {opid,num,2},              %% Originator protocol identifier
      {res1,numstr}].            %% Reserved

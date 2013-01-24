@@ -43,7 +43,7 @@
 
 -module(ucp_arg_syntax).
 
--include_lib("ucperl/include/ucp_defines.hrl").
+-include_lib("ucp_defines.hrl").
 
 
 %%% API EXPORTS
@@ -180,7 +180,7 @@ make_xser({Type, Data}) ->
     make_hex(2, Type) ++ make_hex(2, length(Data)) ++ make_hex_coded(Data).
 
 %%% @doc Make 7 bit packet string.
-%%%  This packing is according to the 3G TS 23.038 
+%%%  This packing is according to the 3G TS 23.038
 %%% @end
 %%% @spec make_pack7(Unpacked) -> Packed::string()
 %%%  Unpacked = binary() | string()
@@ -191,7 +191,7 @@ make_pack7(Unpacked) ->
     make_hex_coded(pack7(Unpacked)).
 
 %%% @doc Make 7 bit packet string.
-%%%  This packing is according to the 3G TS 23.038 
+%%%  This packing is according to the 3G TS 23.038
 %%% @end
 %%% @spec pack7(Unpacked::binary()) -> Packed::binary()
 
@@ -347,7 +347,7 @@ parse_xsers([T1,T2,N1,N2 | Xs], Level) ->
 
 
 %%% @doc Parse 7 bit packet string.
-%%%  This packing is according to the 3G TS 23.038 
+%%%  This packing is according to the 3G TS 23.038
 %%% @end
 %%% @spec parse_pack7(Packed::string()) -> Unpacked::string()
 parse_pack7(Packed) ->
@@ -355,7 +355,7 @@ parse_pack7(Packed) ->
     erlang:binary_to_list(unpack7(BinPacked)).
 
 %%% @doc Unpack 7 bit packet binary.
-%%%  This packing is according to the 3G TS 23.038 
+%%%  This packing is according to the 3G TS 23.038
 %%% @end
 %%% @spec unpack7(Packed::binary()) -> Unpacked::binary()
 
