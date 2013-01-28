@@ -47,6 +47,7 @@
 
 -export([start/5, start_link/5, stop/1]).
 -export([login/4, submit_sm/5]).          %% Client
+-export([reply_result/2]).
 -export([delivery_sm/5, notify_sm/4]).    %% Server
 
 %%% THIS BEHAVIOUR EXPORTS
@@ -238,6 +239,16 @@ notify_sm(Ref, Addr, OrigAddr, Opt) ->
     gen_server:call(ref_to_pid(Ref),
                     {notify_sm, Addr, OrigAddr, Opt}, ?CALL_TIMEOUT).
 
+
+%%% @doc Send a result message via the session.
+%%% @spec reply_result(Ref, Message) -> ok
+%%%  Ref = atom() | pid()
+%%%  Message = string()
+%%% @end
+reply_result(Ref, Message) ->
+    gen_server:call(ref_to_pid(Ref),
+                    {reply, Message}, ?CALL_TIMEOUT).
+
 %%% THIS BEHAVIOUR DEFINITION FUNCTION
 
 %%% @doc Defines the callbacks for the behaviour.
@@ -416,6 +427,13 @@ handle_call({notify_sm, Addr, OrigAddr, Opt}, From, State) ->
         end,
     NewState = try_to_send_message(MakeFun, State, From),
     {noreply, NewState, get_timeout(NewState)};
+
+handle_call({reply, Message}, From, State) ->
+    format("handle_call( {reply, ~w}, ~w, ~w)~n",
+           [Message, From, State]),
+    NewState = send_result(Message, State),
+    {reply, ok, NewState};
+
 
 handle_call(Request, _From, State) ->
     error_logger:warning_msg("Unexpected Call ~w~n", [Request]),
@@ -605,7 +623,7 @@ try_to_send_message(MakeFun, State, From) ->
                     Message = MakeFun(Trn),
                     NewState = send_message(Message, State),
                     NewState
-                catch C:E ->
+                catch _:_ ->
                     io:format("~n~n ERROR: ~p", [erlang:get_stacktrace()])
                 end
             end
