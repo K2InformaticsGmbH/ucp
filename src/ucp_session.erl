@@ -379,7 +379,7 @@ handle_call({login, OAddr, PWD, Opt}, From, State) ->
                                                    PWD,
                                                    Opt)
         end,
-    NewState = try_to_send_message(MakeFun, State, From),
+    NewState = try_to_send_message(ucp_syntax:get_value(trn, Opt), MakeFun, State, From),
     {noreply, NewState, get_timeout(NewState)};
 
 handle_call({submit_sm, Addr, OrigAddr, SM, Opt}, From, State) ->
@@ -394,7 +394,7 @@ handle_call({submit_sm, Addr, OrigAddr, SM, Opt}, From, State) ->
                                           SM,
                                           Opt)
         end,
-    NewState = try_to_send_message(MakeFun, State, From),
+    NewState = try_to_send_message(ucp_syntax:get_value(trn, Opt), MakeFun, State, From),
     {noreply, NewState, get_timeout(NewState)};
 
 %%% TODO - copy and paste of submit_sm
@@ -410,7 +410,7 @@ handle_call({delivery_sm, Addr, OrigAddr, SM, Opt}, From, State) ->
                                             SM,
                                             Opt)
         end,
-    NewState = try_to_send_message(MakeFun, State, From),
+    NewState = try_to_send_message(ucp_syntax:get_value(trn, Opt), MakeFun, State, From),
     {noreply, NewState, get_timeout(NewState)};
 
 %%% TODO - copy and paste of submit_sm
@@ -425,7 +425,7 @@ handle_call({notify_sm, Addr, OrigAddr, Opt}, From, State) ->
                                                       OrigAddr,
                                                       Opt)
         end,
-    NewState = try_to_send_message(MakeFun, State, From),
+    NewState = try_to_send_message(ucp_syntax:get_value(trn, Opt), MakeFun, State, From),
     {noreply, NewState, get_timeout(NewState)};
 
 handle_call({reply, Message}, From, State) ->
@@ -592,13 +592,15 @@ get_value(Key, UCP) ->
 %%% IMPORTANT: this function have to call gen_server:reply !!
 %%%            if the From field is not 'undefined'
 %%% ----------------------------------------------------------
-
 try_to_send_message(MakeFun, State, From) ->
-    format("Try to send message = ~p ~p~n", [MakeFun, State]),
+    try_to_send_message(undefined, MakeFun, State, From).
+
+try_to_send_message(undefined, MakeFun, State, From) ->
+    try_to_send_message(State#st.trn, MakeFun, State, From);
+try_to_send_message(Trn, MakeFun, State, From) ->
+    format("Try to send message = ~p ~p ~p~n", [Trn, MakeFun, State]),
 
     %% Build the login message and send it (to the SMSC).
-
-    Trn = State#st.trn,
     Rtimers = State#st.result_timers,
 
     case lists:keymember(Trn, ?TRN_POS, Rtimers) of
