@@ -623,7 +623,7 @@ try_to_send_message(Trn, MakeFun, State, From) ->
 
                     reply(From, {ok, Trn}),
                     Message = MakeFun(Trn),
-                    NewState = send_message(Message, State),
+                    NewState = send_message(Trn, Message, State),
                     NewState
                 catch _:_ ->
                     io:format("~n~n ERROR: ~p", [erlang:get_stacktrace()])
@@ -644,14 +644,13 @@ reply(From, Message) ->
 %%% A generic function that sends messages
 %%% ----------------------------------------------------------
 
-send_message(Message, State) ->
+send_message(Trn, Message, State) ->
     format("Message = ~p~n", [ucp_syntax:prettify(Message)]),
 
     Socket = State#st.socket,
     ok = gen_tcp:send(Socket, Message),
 
     TrnCnt = State#st.trn_cnt,
-    Trn = State#st.trn,
     KAtimer = timestamp(State#st.keep_alive_period),
     Rtimer = timestamp(State#st.result_timeout),
 
