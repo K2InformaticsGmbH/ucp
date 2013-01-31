@@ -357,7 +357,8 @@ init([Module, ParentRef, Socket, Opts]) ->
              socket = Socket,
              inbuffer = []
             },
-
+    %% needed for better login in callbacks
+    put(sock, Socket),
     ok = inet:setopts(Socket, [{active, once}]),
 
     {ok, State, get_timeout(State)}.
