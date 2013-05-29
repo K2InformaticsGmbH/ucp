@@ -407,7 +407,7 @@ parse(RAW_UCP_string) ->
 supported() ->
     Parse    = [01, 02, 03, 30, 31, 51, 52, 53, 54, 56, 57, 58, 60, 61],
     Build    = [            30, 31, 51, 52, 53,                 60    ],
-    ParseAck = [01, 02, 03,     31, 51, 52, 53, 54, 56, 57, 58, 60, 61],
+    ParseAck = [01, 02, 03, 30, 31, 51, 52, 53, 54, 56, 57, 58, 60, 61],
     BuildAck = [            30, 31, 51, 52, 53, 54, 56, 57, 58, 60, 61],
     {Parse, Build, ParseAck, BuildAck}.
 
@@ -768,7 +768,8 @@ parse_result_data(UCP, Data) ->
                     parse_ack_data_generic(UCP, Tail);
                 03 ->
                     parse_ack_data_generic(UCP, Tail);
-                %% TODO - implement parse ack for 30
+                30 ->
+                    parse_ack_data_generic(UCP, Tail);
                 31 ->
                     parse_ack_data_generic(UCP, Tail);
                 51 ->
@@ -799,7 +800,10 @@ parse_result_data(UCP, Data) ->
 parse_ack_data_generic(UCP, [""]) ->
     [{ack,"A"} | UCP];
 parse_ack_data_generic(UCP, [SM]) ->
-    [{ack,"A"},{sm, SM} | UCP].
+    [{ack,"A"},{sm, SM} | UCP];
+parse_ack_data_generic(UCP, [[], SM]) ->
+    [{ack, "A"}, {sm, SM} | UCP].
+
 
 %%% TODO - implement parse ack data for 30
 
