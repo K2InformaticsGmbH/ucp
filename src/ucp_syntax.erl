@@ -388,7 +388,8 @@ parse(RAW_UCP_string) ->
 
     test_supported(Type, OT, Data),
 
-    test_checksum(Chk, UCP_mess ++ "/"),
+    %% mpro adaption: do not fail any more upon nonmatching checksum
+    % test_checksum(Chk, UCP_mess ++ "/"),  
 
     UCP =
         [{trn,    ucp_arg_syntax:parse_num(TrnStr)},
@@ -1092,6 +1093,5 @@ test_supported(Type, OT, Data) ->
 
 %%% Test if the checksum is correct
 
-test_checksum(_Chk0, String) ->
-    Chk1 = ucp_arg_syntax:make_checksum(String),
-    Chk1.   %% mpro adaption: do not fail any more upon nonmatching checksum
+test_checksum(Chk, String) ->
+    Chk = ucp_arg_syntax:make_checksum(String).
