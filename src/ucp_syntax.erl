@@ -381,24 +381,33 @@ make_nack(UCP, Reason) ->
 parse(RAW_UCP_string) ->
     [2|S] = RAW_UCP_string,
     {UCP_mess, [$/, CH1, CH2, 3]} = lists:split(length(S) - 4, S),
-    [TrnStr, LengthStr, Type, OtStr | Data ] = extract_arguments(UCP_mess),
+
     Chk = [CH1, CH2],
+    case extract_arguments(UCP_mess) of
+        [TrnStr, LengthStr, Type, OtStr | Data ] ->
 
-    OT = ucp_arg_syntax:parse_num(OtStr),
+            OT = ucp_arg_syntax:parse_num(OtStr),
 
-    test_supported(Type, OT, Data),
+            test_supported(Type, OT, Data),
 
-    %% mpro adaption: do not fail any more upon nonmatching checksum
-    % test_checksum(Chk, UCP_mess ++ "/"),  
+            %% mpro adaption: do not fail any more upon nonmatching checksum
+            % test_checksum(Chk, UCP_mess ++ "/"),  
 
-    UCP =
-        [{trn,    ucp_arg_syntax:parse_num(TrnStr)},
-         {length, ucp_arg_syntax:parse_num(LengthStr)},
-         {type,   Type},
-         {ot,     OT},
-         {chk,    Chk}],
+            UCP =
+                [{trn,    ucp_arg_syntax:parse_num(TrnStr)},
+                 {length, ucp_arg_syntax:parse_num(LengthStr)},
+                 {type,   Type},
+                 {ot,     OT},
+                 {chk,    Chk}],
 
-    parse_data(UCP, Data).
+            parse_data(UCP, Data);
+
+        [TrnStr, LengthStr, Type] ->
+            [{trn,    ucp_arg_syntax:parse_num(TrnStr)},
+             {length, ucp_arg_syntax:parse_num(LengthStr)},
+             {type,   Type},
+             {chk,    Chk}]
+    end.
 
 %%% ----------------------------------------------------------
 %%% Test for what messages are supported to parse and build
